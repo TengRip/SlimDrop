@@ -94,7 +94,10 @@ async function ensureFFmpegLoaded(onStatus) {
     fetchFileFn = fetchFile;
 
     ffmpeg = createFFmpeg({
-        corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
+        // 自動偵測：有 SharedArrayBuffer 用多執行緒版（快），否則用單執行緒版（相容手機與 App 內建瀏覽器）
+        corePath: typeof SharedArrayBuffer !== 'undefined'
+            ? 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js'
+            : 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js',
         // 進度回呼：ratio 為 0~1，透過全域 progressCb 動態傳遞
         progress: ({ ratio }) => {
             if (progressCb) progressCb(Math.round(ratio * 100));
