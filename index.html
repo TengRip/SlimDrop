@@ -5,24 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SlimDrop — 免安裝檔案瘦身</title>
     <link rel="stylesheet" href="style.css">
-    <!-- coi-serviceworker：替 GitHub Pages 補上 COOP/COEP 標頭，讓 ffmpeg.wasm 可用 -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("coi-serviceworker.js").then((reg) => {
-          // 若 Service Worker 是剛安裝的，重新載入頁面讓標頭生效
-          if (!navigator.serviceWorker.controller) {
-            reg.installing && reg.installing.addEventListener("statechange", (e) => {
-              if (e.target.state === "activated") location.reload();
-            });
-          }
-        });
-      }
-    </script>
     <!-- JSZip：用於解壓 / 重新打包 PPTX（PPTX 本質上是 ZIP 壓縮包） -->
     <!-- crossorigin="anonymous" 讓瀏覽器用 CORS 模式載入，Service Worker 才能正常攔截並加入標頭 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- ffmpeg.wasm v0.11.x -->
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 </head>
 <body>
     <div class="app">
@@ -85,6 +72,7 @@
                     <div class="progress-fill" id="progressBar"></div>
                 </div>
                 <p class="progress-pct" id="progressPct">0%</p>
+                <button class="btn btn-ghost btn-block" id="cancelBtn">放棄</button>
             </div>
 
             <!-- ④ 結果區（完成後顯示） -->

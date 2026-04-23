@@ -10,6 +10,7 @@ let ffmpeg = null;          // FFmpeg 實例（懶加載，第一次壓縮影片
 let fetchFileFn = null;     // ffmpeg/util 的 fetchFile 函數（一起懶加載）
 let progressCb = null;      // 目前的進度回呼（避免重複綁定 ffmpeg 事件）
 let currentFile = null;     // 使用者目前選擇的檔案
+let cancelled = false;      // 使用者是否按下放棄按鈕
 
 // === 工具函數 ===
 
@@ -101,6 +102,20 @@ async function ensureFFmpegLoaded(onStatus) {
     });
 
     await ffmpeg.load();
+}
+
+/**
+ * 取消壓縮
+ * 設定取消旗標、強制終止 ffmpeg wasm 實例（讓下次重新載入）
+ */
+function cancelCompression() {
+    cancelled = true;
+    if (ffmpeg) {
+        try { ffmpeg.exit(); } catch { /* 忽略 exit 錯誤 */ }
+        ffmpeg = null;      // 重置，下次壓縮時重新載入
+        fetchFileFn = null;
+    }
+    showCard('settingsCard');
 }
 
 /**
@@ -322,6 +337,9 @@ async function compressPptx(file, targetMB, onProgress, onStatus) {
     const pptxOriginalSize = file.size;  // 用來等比分配影片目標大小
 
     for (const path of allPaths) {
+        // 每處理一個媒體檔前檢查是否已按放棄
+        if (cancelled) throw new Error('已取消壓縮');
+
         const entry = zip.files[path];
         if (entry.dir) continue;
 
@@ -475,6 +493,7 @@ async function startCompress() {
         }
     }
 
+    cancelled = false;  // 重置取消旗標
     showCard('progressCard');
     updateProgress(0, '初始化...');
 
@@ -542,6 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectBtn  = document.getElementById('selectBtn');
     const compressBtn = document.getElementById('compressBtn');
     const resetBtn   = document.getElementById('resetBtn');
+    const cancelBtn  = document.getElementById('cancelBtn');
 
     // --- 拖曳上傳 ---
     dropZone.addEventListener('dragover', (e) => {
@@ -579,4 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 重設按鈕（再壓一個） ---
     resetBtn.addEventListener('click', resetUI);
+
+    // --- 放棄按鈕（壓縮中途取消） ---
+    cancelBtn.addEventListener('click', cancelCompression);
 });
