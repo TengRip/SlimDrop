@@ -19,9 +19,10 @@
       }
     </script>
     <!-- JSZip：用於解壓 / 重新打包 PPTX（PPTX 本質上是 ZIP 壓縮包） -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- crossorigin="anonymous" 讓瀏覽器用 CORS 模式載入，Service Worker 才能正常攔截並加入標頭 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" crossorigin="anonymous"></script>
     <!-- ffmpeg.wasm v0.11.x -->
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="app">
