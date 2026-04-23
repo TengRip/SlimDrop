@@ -548,6 +548,12 @@ async function startCompress() {
         showCard('resultCard');
 
     } catch (err) {
+        if (cancelled) {
+            // 使用者主動放棄，不顯示錯誤，只提示已取消
+            updateProgress(0, '已取消');
+            showCard('settingsCard');
+            return;
+        }
         console.error('壓縮失敗：', err);
         alert(`壓縮失敗\n\n${err.message || '未知錯誤，請開啟瀏覽器開發者工具查看詳情'}`);
         showCard('settingsCard');
