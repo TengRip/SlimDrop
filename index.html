@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlimDrop — 免安裝檔案瘦身</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- JSZip：用於解壓 / 重新打包 PPTX（PPTX 本質上是 ZIP 壓縮包） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- ffmpeg.wasm v0.11.x -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+    <div class="app">
+
+        <!-- 頁首 -->
+        <header class="header">
+            <div class="logo">💾 SlimDrop</div>
+            <p class="tagline">影片 &amp; 簡報一鍵瘦身，免安裝、不上傳</p>
+        </header>
+
+        <main class="main">
+
+            <!-- ① 上傳區 -->
+            <div class="card upload-card" id="dropZone">
+                <div class="upload-icon">📁</div>
+                <p class="upload-primary">拖曳檔案到這裡</p>
+                <p class="upload-or">或</p>
+                <button class="btn btn-outline" id="selectBtn">選擇檔案</button>
+                <p class="upload-hint">支援 MP4 · MOV · AVI · PPTX</p>
+                <input type="file" id="fileInput" accept=".mp4,.mov,.avi,.pptx" hidden>
+            </div>
+
+            <!-- ② 設定區（選完檔後顯示） -->
+            <div class="card" id="settingsCard" hidden>
+                <div id="fileInfo"></div>
+                <hr class="divider">
+
+                <!-- 影片設定：目標大小 -->
+                <div id="videoSettings">
+                    <div class="setting-row">
+                        <label class="setting-label" for="targetSize">壓縮目標大小上限</label>
+                        <div class="input-group">
+                            <input type="number" id="targetSize" class="number-input"
+                                   value="20" min="1" max="2000">
+                            <span class="input-unit">MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PPTX 設定：目標大小（圖片＋嵌入影片都會壓縮） -->
+                <div id="pptxSettings" hidden>
+                    <div class="setting-row">
+                        <label class="setting-label" for="pptxTargetSize">壓縮目標大小上限</label>
+                        <div class="input-group">
+                            <input type="number" id="pptxTargetSize" class="number-input"
+                                   value="20" min="1" max="2000">
+                            <span class="input-unit">MB</span>
+                        </div>
+                    </div>
+                    <p class="setting-note">圖片及嵌入影片皆會壓縮</p>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="compressBtn">開始壓縮</button>
+            </div>
+
+            <!-- ③ 進度區（壓縮中顯示） -->
+            <div class="card" id="progressCard" hidden>
+                <p class="progress-status" id="progressStatus">準備中...</p>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <p class="progress-pct" id="progressPct">0%</p>
+            </div>
+
+            <!-- ④ 結果區（完成後顯示） -->
+            <div class="card result-card" id="resultCard" hidden>
+                <div class="result-icon">✅</div>
+                <h2 class="result-title">壓縮完成！</h2>
+
+                <div class="size-row">
+                    <div class="size-box">
+                        <div class="size-label">原始大小</div>
+                        <div class="size-value" id="originalSize">—</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="size-box">
+                        <div class="size-label">壓縮後</div>
+                        <div class="size-value" id="compressedSize">—</div>
+                    </div>
+                    <div class="size-box">
+                        <div class="size-label">減少</div>
+                        <div class="size-value accent" id="savedPct">—</div>
+                    </div>
+                </div>
+
+                <a class="btn btn-primary btn-block" id="downloadBtn" download>⬇️ 下載壓縮版</a>
+                <button class="btn btn-ghost btn-block" id="resetBtn">再壓一個</button>
+            </div>
+
+        </main>
+
+        <!-- 頁尾 -->
+        <footer class="footer">
+            🔒 檔案在您的瀏覽器本機處理，不會上傳到任何伺服器
+        </footer>
+
+    </div>
+
+    <!-- type="module" 讓 app.js 可以使用動態 import() 載入 ffmpeg.wasm -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

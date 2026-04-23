@@ -1,0 +1,336 @@
+/* === 基礎重置 === */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+    background: #F1F5F9;
+    color: #1E293B;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem 3rem;
+}
+
+/* === 主容器 === */
+.app {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* === 頁首 === */
+.header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #3B82F6;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.3rem;
+}
+
+.tagline {
+    font-size: 0.88rem;
+    color: #64748B;
+}
+
+/* === 卡片 === */
+.card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+}
+
+/* === 上傳區 === */
+.upload-card {
+    text-align: center;
+    border: 2px dashed #CBD5E1;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+    padding: 2.25rem 1.5rem;
+}
+
+.upload-card:hover {
+    border-color: #93C5FD;
+    background: #F8FBFF;
+}
+
+.upload-card.drag-over {
+    border-color: #3B82F6;
+    background: #EFF6FF;
+}
+
+.upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    pointer-events: none;
+}
+
+.upload-primary {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.3rem;
+    pointer-events: none;
+}
+
+.upload-or {
+    font-size: 0.82rem;
+    color: #94A3B8;
+    margin-bottom: 0.75rem;
+    pointer-events: none;
+}
+
+.upload-hint {
+    font-size: 0.78rem;
+    color: #94A3B8;
+    margin-top: 0.75rem;
+    pointer-events: none;
+}
+
+/* === 按鈕 === */
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.15s, opacity 0.15s, transform 0.1s;
+    text-decoration: none;
+    text-align: center;
+    font-family: inherit;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+    background: #3B82F6;
+    color: #FFFFFF;
+}
+.btn-primary:hover { background: #2563EB; }
+
+.btn-outline {
+    background: transparent;
+    color: #3B82F6;
+    border: 1.5px solid #3B82F6;
+}
+.btn-outline:hover { background: #EFF6FF; }
+
+.btn-ghost {
+    background: transparent;
+    color: #64748B;
+}
+.btn-ghost:hover { background: #F1F5F9; }
+
+/* 佔滿整行的按鈕 */
+.btn-block {
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+/* === 檔案資訊 === */
+.file-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1E293B;
+    word-break: break-all;
+    margin-bottom: 0.2rem;
+}
+
+.file-size-text {
+    font-size: 0.84rem;
+    color: #64748B;
+}
+
+.file-warning {
+    font-size: 0.8rem;
+    color: #D97706;
+    margin-top: 0.3rem;
+}
+
+/* === 分隔線 === */
+.divider {
+    border: none;
+    border-top: 1px solid #F1F5F9;
+    margin: 1rem 0;
+}
+
+/* === 設定列 === */
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.setting-label {
+    font-size: 0.88rem;
+    color: #475569;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.number-input {
+    width: 68px;
+    padding: 0.4rem 0.5rem;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 7px;
+    font-size: 0.95rem;
+    text-align: center;
+    color: #1E293B;
+    font-family: inherit;
+}
+.number-input:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.input-unit {
+    font-size: 0.84rem;
+    color: #64748B;
+}
+
+.setting-note {
+    font-size: 0.78rem;
+    color: #94A3B8;
+    margin-top: 0.3rem;
+    text-align: right;
+}
+
+.select-input {
+    padding: 0.4rem 0.75rem;
+    border: 1.5px solid #CBD5E1;
+    border-radius: 7px;
+    font-size: 0.88rem;
+    color: #1E293B;
+    background: white;
+    font-family: inherit;
+    cursor: pointer;
+}
+.select-input:focus {
+    outline: none;
+    border-color: #3B82F6;
+}
+
+/* === 進度區 === */
+#progressCard {
+    text-align: center;
+    padding: 2rem 1.5rem;
+}
+
+.progress-status {
+    font-size: 0.88rem;
+    color: #475569;
+    margin-bottom: 1rem;
+    min-height: 1.3em;
+    line-height: 1.4;
+}
+
+.progress-track {
+    background: #E2E8F0;
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3B82F6 0%, #6366F1 100%);
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.35s ease;
+}
+
+.progress-pct {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #3B82F6;
+}
+
+/* === 結果區 === */
+.result-card {
+    text-align: center;
+}
+
+.result-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.result-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+}
+
+.size-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    padding: 1rem;
+    background: #F8FAFC;
+    border-radius: 12px;
+}
+
+.size-box {
+    flex: 1;
+    min-width: 0;
+}
+
+.size-label {
+    font-size: 0.72rem;
+    color: #94A3B8;
+    margin-bottom: 0.3rem;
+}
+
+.size-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1E293B;
+}
+
+.size-value.green  { color: #059669; }
+.size-value.accent { color: #3B82F6; }
+
+.arrow {
+    color: #CBD5E1;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* === 頁尾 === */
+.footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #94A3B8;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+}
+
+/* === 響應式（小螢幕） === */
+@media (max-width: 400px) {
+    body { padding: 1rem 0.75rem 2rem; }
+    .card { padding: 1.25rem; }
+    .size-value { font-size: 0.9rem; }
+    .size-row { gap: 0.35rem; }
+}
