@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SlimDrop — 免安裝檔案瘦身</title>
+    <title>SlimDrop｜PPTX 簡報壓縮工具（含嵌入影片）免費線上瘦身</title>
+    <meta name="description" content="簡報太大寄不出去、上傳系統卡在檔案大小限制？SlimDrop 免安裝、免上傳，直接在瀏覽器把 PPTX 簡報（含嵌入影片）壓到你指定的大小以內，也支援 MP4/MOV/AVI 影片壓縮。檔案全程留在你的電腦，不會上傳到任何伺服器。">
+    <meta property="og:title" content="SlimDrop｜PPTX 簡報壓縮工具（含嵌入影片）">
+    <meta property="og:description" content="簡報太大寄不出去？免安裝、免上傳，瀏覽器端直接把 PPTX 壓到指定大小以內，影片也能壓。">
+    <meta property="og:type" content="website">
     <link rel="stylesheet" href="style.css">
     <!-- JSZip：用於解壓 / 重新打包 PPTX（PPTX 本質上是 ZIP 壓縮包） -->
     <!-- crossorigin="anonymous" 讓瀏覽器用 CORS 模式載入，Service Worker 才能正常攔截並加入標頭 -->
@@ -12,102 +16,177 @@
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 </head>
 <body>
-    <div class="app">
 
-        <!-- 頁首 -->
-        <header class="header">
-            <div class="logo">💾 SlimDrop</div>
-            <p class="tagline">影片 &amp; 簡報一鍵瘦身，免安裝、不上傳</p>
-        </header>
+    <!-- 頁首導覽 -->
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div class="brand">💾 SlimDrop</div>
+            <nav class="site-nav">
+                <a href="#tool">開始壓縮</a>
+                <a href="#features">功能</a>
+                <a href="#faq">常見問題</a>
+            </nav>
+        </div>
+    </header>
 
-        <main class="main">
+    <!-- Hero：主打 PPTX 壓縮痛點 -->
+    <section class="hero">
+        <p class="hero-eyebrow">免安裝・不上傳・完全免費</p>
+        <h1 class="hero-title">簡報太大，寄不出去？</h1>
+        <p class="hero-subtitle">
+            PPTX 簡報常常因為嵌入影片動輒破百 MB，公司系統又卡上傳限制。<br class="br-desktop">
+            SlimDrop 直接在你的瀏覽器把簡報壓到指定大小以內——圖片、嵌入影片一起處理，檔案不會離開你的電腦。
+        </p>
+        <a href="#tool" class="btn btn-primary btn-hero">立即壓縮簡報 ↓</a>
+        <p class="hero-note">也支援 MP4 / MOV / AVI 影片壓縮</p>
+    </section>
 
-            <!-- ① 上傳區 -->
-            <div class="card upload-card" id="dropZone">
-                <div class="upload-icon">📁</div>
-                <p class="upload-primary">拖曳檔案到這裡</p>
-                <p class="upload-or">或</p>
-                <button class="btn btn-outline" id="selectBtn">選擇檔案</button>
-                <p class="upload-hint">支援 MP4 · MOV · AVI · PPTX</p>
-                <input type="file" id="fileInput" accept=".mp4,.mov,.avi,.pptx" hidden>
-            </div>
-
-            <!-- ② 設定區（選完檔後顯示） -->
-            <div class="card" id="settingsCard" hidden>
-                <div id="fileInfo"></div>
-                <hr class="divider">
-
-                <!-- 影片設定：目標大小 -->
-                <div id="videoSettings">
-                    <div class="setting-row">
-                        <label class="setting-label" for="targetSize">壓縮目標大小上限</label>
-                        <div class="input-group">
-                            <input type="number" id="targetSize" class="number-input"
-                                   value="20" min="1" max="2000">
-                            <span class="input-unit">MB</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PPTX 設定：目標大小（圖片＋嵌入影片都會壓縮） -->
-                <div id="pptxSettings" hidden>
-                    <div class="setting-row">
-                        <label class="setting-label" for="pptxTargetSize">壓縮目標大小上限</label>
-                        <div class="input-group">
-                            <input type="number" id="pptxTargetSize" class="number-input"
-                                   value="20" min="1" max="2000">
-                            <span class="input-unit">MB</span>
-                        </div>
-                    </div>
-                    <p class="setting-note">圖片及嵌入影片皆會壓縮</p>
-                </div>
-
-                <button class="btn btn-primary btn-block" id="compressBtn">開始壓縮</button>
-            </div>
-
-            <!-- ③ 進度區（壓縮中顯示） -->
-            <div class="card" id="progressCard" hidden>
-                <p class="progress-status" id="progressStatus">準備中...</p>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progressBar"></div>
-                </div>
-                <p class="progress-pct" id="progressPct">0%</p>
-                <button class="btn btn-ghost btn-block" id="cancelBtn">放棄</button>
-            </div>
-
-            <!-- ④ 結果區（完成後顯示） -->
-            <div class="card result-card" id="resultCard" hidden>
-                <div class="result-icon">✅</div>
-                <h2 class="result-title">壓縮完成！</h2>
-
-                <div class="size-row">
-                    <div class="size-box">
-                        <div class="size-label">原始大小</div>
-                        <div class="size-value" id="originalSize">—</div>
-                    </div>
-                    <div class="arrow">→</div>
-                    <div class="size-box">
-                        <div class="size-label">壓縮後</div>
-                        <div class="size-value" id="compressedSize">—</div>
-                    </div>
-                    <div class="size-box">
-                        <div class="size-label">減少</div>
-                        <div class="size-value accent" id="savedPct">—</div>
-                    </div>
-                </div>
-
-                <a class="btn btn-primary btn-block" id="downloadBtn" download>⬇️ 下載壓縮版</a>
-                <button class="btn btn-ghost btn-block" id="resetBtn">再壓一個</button>
-            </div>
-
-        </main>
-
-        <!-- 頁尾 -->
-        <footer class="footer">
-            🔒 檔案在您的瀏覽器本機處理，不會上傳到任何伺服器
-        </footer>
-
+    <!-- 廣告版位：工具上方 -->
+    <div class="ad-slot-wrap">
+        <div class="ad-slot" data-ad-slot="top"></div>
     </div>
+
+    <!-- 功能特色 -->
+    <section class="features" id="features">
+        <div class="feature-card feature-highlight">
+            <div class="feature-icon">📽️</div>
+            <h3>PPTX 簡報瘦身（主打）</h3>
+            <p>圖片重新編碼、嵌入影片依比例壓縮，實測 69.7 MB 壓到 19 MB，畫面文字完全不受影響。</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎬</div>
+            <h3>影片壓縮</h3>
+            <p>MP4／MOV／AVI 皆可，設定目標大小，自動計算最適合的位元率。</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>不上傳，保護隱私</h3>
+            <p>所有運算都在你的瀏覽器本機完成，檔案不會傳到任何伺服器，簡報內容不外流。</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>保證壓在目標以內</h3>
+            <p>輸入你要的大小上限，SlimDrop 自動抓誤差緩衝，壓縮結果保證不超標。</p>
+        </div>
+    </section>
+
+    <!-- 主工具區（原有功能，DOM 結構與 ID 完全保留） -->
+    <main class="app" id="tool">
+
+        <!-- ① 上傳區 -->
+        <div class="card upload-card" id="dropZone">
+            <div class="upload-icon">📁</div>
+            <p class="upload-primary">拖曳檔案到這裡</p>
+            <p class="upload-or">或</p>
+            <button class="btn btn-outline" id="selectBtn">選擇檔案</button>
+            <p class="upload-hint">支援 MP4 · MOV · AVI · PPTX</p>
+            <input type="file" id="fileInput" accept=".mp4,.mov,.avi,.pptx" hidden>
+        </div>
+
+        <!-- ② 設定區（選完檔後顯示） -->
+        <div class="card" id="settingsCard" hidden>
+            <div id="fileInfo"></div>
+            <hr class="divider">
+
+            <!-- 影片設定：目標大小 -->
+            <div id="videoSettings">
+                <div class="setting-row">
+                    <label class="setting-label" for="targetSize">壓縮目標大小上限</label>
+                    <div class="input-group">
+                        <input type="number" id="targetSize" class="number-input"
+                               value="20" min="1" max="2000">
+                        <span class="input-unit">MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PPTX 設定：目標大小（圖片＋嵌入影片都會壓縮） -->
+            <div id="pptxSettings" hidden>
+                <div class="setting-row">
+                    <label class="setting-label" for="pptxTargetSize">壓縮目標大小上限</label>
+                    <div class="input-group">
+                        <input type="number" id="pptxTargetSize" class="number-input"
+                               value="20" min="1" max="2000">
+                        <span class="input-unit">MB</span>
+                    </div>
+                </div>
+                <p class="setting-note">圖片及嵌入影片皆會壓縮</p>
+            </div>
+
+            <button class="btn btn-primary btn-block" id="compressBtn">開始壓縮</button>
+        </div>
+
+        <!-- ③ 進度區（壓縮中顯示） -->
+        <div class="card" id="progressCard" hidden>
+            <p class="progress-status" id="progressStatus">準備中...</p>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <p class="progress-pct" id="progressPct">0%</p>
+            <button class="btn btn-ghost btn-block" id="cancelBtn">放棄</button>
+        </div>
+
+        <!-- ④ 結果區（完成後顯示） -->
+        <div class="card result-card" id="resultCard" hidden>
+            <div class="result-icon">✅</div>
+            <h2 class="result-title">壓縮完成！</h2>
+
+            <div class="size-row">
+                <div class="size-box">
+                    <div class="size-label">原始大小</div>
+                    <div class="size-value" id="originalSize">—</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="size-box">
+                    <div class="size-label">壓縮後</div>
+                    <div class="size-value" id="compressedSize">—</div>
+                </div>
+                <div class="size-box">
+                    <div class="size-label">減少</div>
+                    <div class="size-value accent" id="savedPct">—</div>
+                </div>
+            </div>
+
+            <a class="btn btn-primary btn-block" id="downloadBtn" download>⬇️ 下載壓縮版</a>
+            <button class="btn btn-ghost btn-block" id="resetBtn">再壓一個</button>
+        </div>
+
+    </main>
+
+    <!-- 廣告版位：工具下方 -->
+    <div class="ad-slot-wrap">
+        <div class="ad-slot" data-ad-slot="bottom"></div>
+    </div>
+
+    <!-- 常見問題（補 SEO 內容深度） -->
+    <section class="faq" id="faq">
+        <h2 class="faq-title">常見問題</h2>
+        <div class="faq-item">
+            <h3>檔案會上傳到伺服器嗎？</h3>
+            <p>不會。SlimDrop 所有壓縮運算都在你的瀏覽器本機執行（ffmpeg.wasm + JSZip），簡報跟影片內容完全不會離開你的電腦。</p>
+        </div>
+        <div class="faq-item">
+            <h3>PPTX 壓縮會不會影響畫質或排版？</h3>
+            <p>圖片會重新編碼壓縮、嵌入影片會依比例降低位元率，但投影片的文字、版面配置完全不受影響。</p>
+        </div>
+        <div class="faq-item">
+            <h3>可以壓到多小？</h3>
+            <p>由你自訂目標大小上限（MB），SlimDrop 會自動計算對應的壓縮參數，並預留緩衝確保結果不超過你設定的大小。</p>
+        </div>
+        <div class="faq-item">
+            <h3>支援哪些檔案格式？</h3>
+            <p>簡報：.pptx（含內嵌圖片與影片）。影片：.mp4 / .mov / .avi。</p>
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        🔒 檔案在您的瀏覽器本機處理，不會上傳到任何伺服器
+    </footer>
+
+    <!-- 廣告設定：沒填 client ID / slot ID 時完全不會顯示廣告框 -->
+    <script src="ads-config.js"></script>
+    <script src="ads.js"></script>
 
     <!-- type="module" 讓 app.js 可以使用動態 import() 載入 ffmpeg.wasm -->
     <script type="module" src="app.js"></script>

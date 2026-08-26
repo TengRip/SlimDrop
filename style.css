@@ -10,34 +10,201 @@ body {
     background: #F1F5F9;
     color: #1E293B;
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 2rem 1rem 3rem;
 }
 
-/* === 主容器 === */
+/* === 主容器（工具區） === */
 .app {
     width: 100%;
     max-width: 480px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
 }
 
-/* === 頁首 === */
-.header {
-    text-align: center;
-    margin-bottom: 1.75rem;
+/* === 網站頁首導覽 === */
+.site-header {
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-.logo {
-    font-size: 1.8rem;
+.site-header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-size: 1.3rem;
     font-weight: 800;
     color: #3B82F6;
     letter-spacing: -0.5px;
-    margin-bottom: 0.3rem;
 }
 
-.tagline {
-    font-size: 0.88rem;
+.site-nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.site-nav a {
+    font-size: 0.9rem;
     color: #64748B;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.site-nav a:hover {
+    color: #3B82F6;
+}
+
+/* === Hero === */
+.hero {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 2.5rem;
+    text-align: center;
+}
+
+.hero-eyebrow {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #3B82F6;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+}
+
+.hero-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 1.75rem;
+}
+
+.br-desktop {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .hero-title { font-size: 2.6rem; }
+    .br-desktop { display: inline; }
+}
+
+.btn-hero {
+    font-size: 1.05rem;
+    padding: 0.85rem 2.25rem;
+    box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+}
+
+.hero-note {
+    margin-top: 1rem;
+    font-size: 0.84rem;
+    color: #94A3B8;
+}
+
+/* === 功能特色 === */
+.features {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.feature-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+}
+
+.feature-highlight {
+    border: 1.5px solid #93C5FD;
+    background: linear-gradient(180deg, #EFF6FF 0%, #FFFFFF 100%);
+}
+
+.feature-icon {
+    font-size: 1.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.feature-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 0.4rem;
+}
+
+.feature-card p {
+    font-size: 0.86rem;
+    color: #64748B;
+    line-height: 1.6;
+}
+
+/* === 廣告版位 === */
+.ad-slot-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+}
+
+.ad-slot {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ad-slot:has(ins) {
+    margin: 1.5rem 0;
+}
+
+/* === 常見問題 === */
+.faq {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem 3rem;
+}
+
+.faq-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+.faq-item {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.faq-item h3 {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 0.35rem;
+}
+
+.faq-item p {
+    font-size: 0.86rem;
+    color: #64748B;
+    line-height: 1.6;
 }
 
 /* === 卡片 === */
@@ -320,11 +487,12 @@ body {
 
 /* === 頁尾 === */
 .footer {
+    max-width: 720px;
+    margin: 0 auto;
     text-align: center;
     font-size: 0.78rem;
     color: #94A3B8;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
+    padding: 1rem 1.25rem 2rem;
 }
 
 /* === 響應式（小螢幕） === */
